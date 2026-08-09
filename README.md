@@ -64,26 +64,6 @@ The platform provides:
 - **Error handling**: Centralized `@ControllerAdvice` exception handling with a styled, standalone error page
 - **Background jobs**: Spring `@Scheduled` tasks for reminder email delivery (60s polling) and daily summary emails (cron, timezone-pinned)
 
-Local Code (IntelliJ)
-│
-▼
-Jenkins Pipeline
-├─ Maven Build (mvn clean package)
-├─ Docker Image Build
-└─ Push to Docker Hub
-│
-▼
-Docker Hub Registry
-(shivaniavani/notepad-app)
-│
-▼
-AWS EC2 Instance
-docker compose pull
-docker compose up -d
-│
-▼
-Live Application
-
 ---
 
 ## 💻 Local Setup
@@ -153,8 +133,5 @@ Feature branches are preserved (not deleted) after merging, for full development
 ---
 
 ## 👤 Author
-
-Built by **Shivani** as an end-to-end portfolio project — from initial Spring Boot scaffolding through feature development, UI design, bug fixing, and full CI/CD deployment to AWS.
+**Shivani**
 ---
-
-## 🔄 CI/CD Pipeline
