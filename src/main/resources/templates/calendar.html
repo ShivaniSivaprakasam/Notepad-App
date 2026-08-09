@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <div class="calendar-header">
+                <a th:href="@{/reminders/calendar(year=${prevYear}, month=${prevMonth})}" class="btn btn-sm">&laquo; Prev</a>
+                <h1 th:text="${monthLabel}"></h1>
+                <a th:href="@{/reminders/calendar(year=${nextYear}, month=${nextMonth})}" class="btn btn-sm">Next &raquo;</a>
+            </div>
+            <a th:href="@{/reminders/new}" class="btn" style="margin-bottom:16px; display:inline-block;">+ New Reminder</a>
+            <div class="calendar-grid">
+                <div class="calendar-day-label" th:each="label : ${ {'Sun','Mon','Tue','Wed','Thu','Fri','Sat'} }" th:text="${label}"></div>
+                <div class="calendar-cell empty" th:each="i : ${#numbers.sequence(1, firstDayOffset)}"></div>
+                <div class="calendar-cell" th:each="day : ${#numbers.sequence(1, daysInMonth)}"
+                     th:classappend="${yearMonth.year == today.year and yearMonth.monthValue == today.monthValue and day == today.dayOfMonth} ? 'today' : ''">
+                    <a th:href="@{'/reminders/day/' + ${yearMonth.atDay(day)}}" class="calendar-day-number" th:text="${day}"></a>
+                    <div class="calendar-reminder-chip" th:each="reminder : ${remindersByDay.get(day)}" th:text="${reminder.title}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Protect Note - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <h1>🔒 Protect This Note</h1>
+            <p th:if="${error}" th:text="${error}" class="error-message"></p>
+            <form th:action="@{'/notes/protect/' + ${noteId}}" method="post">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required minlength="8">
+                <small style="color:var(--text-muted);">At least 8 characters, with an uppercase letter, a lowercase letter, and a number.</small>
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required minlength="8">
+                <br><br>
+                <div class="btn-row">
+                    <button type="submit" class="btn">Protect Note</button>
+                    <a th:href="@{'/notes/' + ${noteId}}" class="btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

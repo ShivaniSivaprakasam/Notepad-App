@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <div class="home-header">
+                <div>
+                    <h1 id="greetingText" th:attr="data-username=${#authentication.name}">Welcome</h1>
+                    <p id="dateText" class="note-meta"></p>
+                </div>
+                <div class="mini-timer" id="miniTimer">--:--:--</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${stats.totalNotesCreated}"></div>
+                    <div class="stat-label">Notes Created</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${stats.completedTodos} + ' / ' + ${stats.totalTodos}"></div>
+                    <div class="stat-label">Tasks Completed</div>
+                </div>
+            </div>
+
+            <div class="productivity-section">
+                <h3>Today's Productivity</h3>
+                <div class="progress-bar-track">
+                    <div class="progress-bar-fill" th:style="'width: ' + ${stats.productivityScore} + '%;'"></div>
+                </div>
+                <p th:text="${stats.productivityScore} + '% of tasks completed'"></p>
+            </div>
+
+            <div id="notificationBanner" class="notification-banner" style="display:none;">
+                🔔 <span id="notificationText"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+<script th:src="@{/js/notifications.js}"></script>
+<script th:src="@{/js/hometime.js}"></script>
+</body>
+</html>

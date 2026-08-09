@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Notes - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <h1 th:text="${viewTitle} ?: 'My Notes'"></h1>
+
+            <div class="search-row">
+                <a th:href="@{/notes/search/advanced}" class="btn">🔍 Advanced Search</a>
+                <a th:href="@{/notes/new}" class="btn">+ New Note</a>
+            </div>
+
+            <!-- Grouped-by-tag view: used only on the main My Notes listing -->
+            <div th:if="${notesByTag != null}">
+                <div th:each="entry : ${notesByTag}">
+                    <h3 class="tag-group-heading" th:text="'#' + ${entry.key}"></h3>
+                    <div class="note-card-wrapper" th:each="note : ${entry.value}">
+                        <div class="note-card" th:classappend="${note.passwordProtected} ? 'locked' : ''">
+                            <h3><span th:if="${note.pinned}" style="color:#e67e22;">📌</span>
+                                <a th:href="@{'/notes/' + ${note.id}}" th:text="${note.title}"></a></h3>
+                            <p class="note-meta">
+                                <span th:if="${note.category}" th:text="'Category: ' + ${note.category.name}"></span>
+                                &nbsp;|&nbsp; Last updated: <span th:text="${#temporals.format(note.updatedAt, 'dd MMM yyyy, HH:mm')}"></span>
+                            </p>
+                            <div th:if="${note.tags != null and not #lists.isEmpty(note.tags)}" style="margin-top:6px;">
+                                <span th:each="tag : ${note.tags}" th:text="${tag.name}" class="tag-chip"></span>
+                            </div>
+                            <div class="btn-row" style="margin-top:10px;">
+                                <a th:href="@{'/notes/edit/' + ${note.id}}" class="btn btn-sm">Edit</a>
+                                <a th:href="@{'/notes/pin/' + ${note.id}}" class="btn btn-sm" th:text="${note.pinned} ? 'Unpin' : 'Pin'"></a>
+                                <a th:href="@{'/notes/favorite/' + ${note.id}}" class="btn btn-sm" th:text="${note.favorite} ? '★ Unfav' : '☆ Fav'"></a>
+                                <a th:href="@{'/notes/archive/' + ${note.id}}" class="btn btn-sm">Archive</a>
+                                <a th:href="@{'/notes/delete/' + ${note.id}}" class="btn btn-sm btn-danger" onclick="return confirm('Move this note to trash?');">Delete</a>
+                            </div>
+                        </div>
+                        <div class="lock-overlay" th:if="${note.passwordProtected}">
+                            <a th:href="@{'/notes/' + ${note.id}}" class="lock-icon" title="Protected — click to unlock">🔒</a>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="tag-group-heading" th:if="${not #lists.isEmpty(untaggedNotes)}">Untagged</h3>
+                <div class="note-card-wrapper" th:each="note : ${untaggedNotes}">
+                    <div class="note-card" th:classappend="${note.passwordProtected} ? 'locked' : ''">
+                        <h3><span th:if="${note.pinned}" style="color:#e67e22;">📌</span>
+                            <a th:href="@{'/notes/' + ${note.id}}" th:text="${note.title}"></a></h3>
+                        <p class="note-meta">Last updated: <span th:text="${#temporals.format(note.updatedAt, 'dd MMM yyyy, HH:mm')}"></span></p>
+                        <div class="btn-row" style="margin-top:10px;">
+                            <a th:href="@{'/notes/edit/' + ${note.id}}" class="btn btn-sm">Edit</a>
+                            <a th:href="@{'/notes/pin/' + ${note.id}}" class="btn btn-sm" th:text="${note.pinned} ? 'Unpin' : 'Pin'"></a>
+                            <a th:href="@{'/notes/favorite/' + ${note.id}}" class="btn btn-sm" th:text="${note.favorite} ? '★ Unfav' : '☆ Fav'"></a>
+                            <a th:href="@{'/notes/archive/' + ${note.id}}" class="btn btn-sm">Archive</a>
+                            <a th:href="@{'/notes/delete/' + ${note.id}}" class="btn btn-sm btn-danger" onclick="return confirm('Move this note to trash?');">Delete</a>
+                        </div>
+                    </div>
+                    <div class="lock-overlay" th:if="${note.passwordProtected}">
+                        <a th:href="@{'/notes/' + ${note.id}}" class="lock-icon" title="Protected — click to unlock">🔒</a>
+                    </div>
+                </div>
+
+                <p th:if="${#lists.isEmpty(notesByTag)} and ${#lists.isEmpty(untaggedNotes)}">No notes yet — create your first one above.</p>
+            </div>
+
+            <!-- Flat list view: used by Favorites/Archive/Trash-style reuses of this template -->
+            <div th:if="${notesByTag == null}">
+                <p th:if="${#lists.isEmpty(notes)}">No notes here yet.</p>
+                <div class="note-card-wrapper" th:each="note : ${notes}">
+                    <div class="note-card" th:classappend="${note.passwordProtected} ? 'locked' : ''">
+                        <h3><span th:if="${note.pinned}" style="color:#e67e22;">📌</span>
+                            <a th:href="@{'/notes/' + ${note.id}}" th:text="${note.title}"></a></h3>
+                        <p class="note-meta">
+                            <span th:if="${note.category}" th:text="'Category: ' + ${note.category.name}"></span>
+                            &nbsp;|&nbsp; Last updated: <span th:text="${#temporals.format(note.updatedAt, 'dd MMM yyyy, HH:mm')}"></span>
+                        </p>
+                        <div th:if="${note.tags != null and not #lists.isEmpty(note.tags)}" style="margin-top:6px;">
+                            <span th:each="tag : ${note.tags}" th:text="${tag.name}" class="tag-chip"></span>
+                        </div>
+                        <div class="btn-row" style="margin-top:10px;">
+                            <a th:href="@{'/notes/edit/' + ${note.id}}" class="btn btn-sm">Edit</a>
+                            <a th:href="@{'/notes/pin/' + ${note.id}}" class="btn btn-sm" th:text="${note.pinned} ? 'Unpin' : 'Pin'"></a>
+                            <a th:href="@{'/notes/favorite/' + ${note.id}}" class="btn btn-sm" th:text="${note.favorite} ? '★ Unfav' : '☆ Fav'"></a>
+                            <a th:href="@{'/notes/archive/' + ${note.id}}" class="btn btn-sm">Archive</a>
+                            <a th:href="@{'/notes/delete/' + ${note.id}}" class="btn btn-sm btn-danger" onclick="return confirm('Move this note to trash?');">Delete</a>
+                        </div>
+                    </div>
+                    <div class="lock-overlay" th:if="${note.passwordProtected}">
+                        <a th:href="@{'/notes/' + ${note.id}}" class="lock-icon" title="Protected — click to unlock">🔒</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

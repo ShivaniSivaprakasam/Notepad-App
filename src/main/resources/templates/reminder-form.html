@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reminder - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <h1 th:text="${reminder.id} != null ? 'Edit Reminder' : 'New Reminder'"></h1>
+
+            <p th:if="${dateError}" th:text="${dateError}" class="error-message"></p>
+
+            <form th:action="@{/reminders}" th:object="${reminder}" method="post">
+                <input type="hidden" th:field="*{id}">
+                <label for="title">Title</label>
+                <input type="text" id="title" th:field="*{title}">
+                <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error-message"></p>
+
+                <label for="description">Description (optional)</label>
+                <textarea id="description" th:field="*{description}" rows="3"></textarea>
+
+                <label for="date">Date</label>
+                <input type="date" id="date" th:field="*{date}" th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}">
+
+                <label for="time">Time</label>
+                <input type="time" id="time" th:field="*{time}">
+
+                <label for="repeatType">Repeat</label>
+                <select id="repeatType" th:field="*{repeatType}">
+                    <option value="NONE">Does not repeat</option>
+                    <option value="DAILY">Daily</option>
+                    <option value="WEEKLY">Weekly</option>
+                    <option value="MONTHLY">Monthly</option>
+                    <option value="YEARLY">Yearly</option>
+                </select>
+
+                <label for="noteId">Link to a note (optional)</label>
+                <select id="noteId" th:field="*{noteId}">
+                    <option value="">-- None --</option>
+                    <option th:each="note : ${notes}" th:value="${note.id}" th:text="${note.title}"></option>
+                </select>
+
+                <br><br>
+                <div class="btn-row">
+                    <button type="submit" class="btn">Save Reminder</button>
+                    <a th:href="@{/reminders/grouped}" class="btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

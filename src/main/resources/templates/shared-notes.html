@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shared Notes - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <h1>Shared Notes</h1>
+            <h3 class="tag-group-heading">Shared by Me</h3>
+            <p th:if="${#lists.isEmpty(sharedByMe)}">You haven't shared any notes yet.</p>
+            <div class="note-card" th:each="share : ${sharedByMe}">
+                <h4 style="margin:0 0 6px;"><a th:href="@{'/notes/' + ${share.note.id}}" th:text="${share.note.title}"></a></h4>
+                <p class="note-meta">Shared with <span th:text="${share.sharedWithUser.username}"></span> (<span th:text="${share.sharedWithUser.email}"></span>) — <span th:text="${share.permission}"></span></p>
+                <a th:href="@{'/notes/' + ${share.note.id} + '/share'}" class="btn btn-sm">Manage</a>
+            </div>
+
+            <h3 class="tag-group-heading" style="margin-top:24px;">Shared with Me</h3>
+            <p th:if="${#lists.isEmpty(sharedWithMe)}">No notes have been shared with you yet.</p>
+            <div class="note-card" th:each="share : ${sharedWithMe}">
+                <h4 style="margin:0 0 6px;"><a th:href="@{'/notes/' + ${share.note.id}}" th:text="${share.note.title}"></a></h4>
+                <p class="note-meta">Shared by <span th:text="${share.note.user.username}"></span> — <span th:text="${share.permission}"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

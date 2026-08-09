@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Shared With Me - Notepad</title><link rel="stylesheet" th:href="@{/css/style.css}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="page-container">
+    <h1>Shared With Me</h1>
+    <p th:if="${#lists.isEmpty(shares)}">No notes have been shared with you yet.</p>
+    <div class="note-card" th:each="share : ${shares}">
+        <h3><a th:href="@{'/notes/' + ${share.note.id}}" th:text="${share.note.title}"></a></h3>
+        <p class="note-meta">
+            Shared by <span th:text="${share.note.user.username}"></span>
+            &nbsp;|&nbsp;
+            Permission: <span th:text="${share.permission}"></span>
+        </p>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

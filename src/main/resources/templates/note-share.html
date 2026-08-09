@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Share Note - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <h1>Share Note</h1>
+            <p th:if="${error}" th:text="${error}" class="error-message"></p>
+            <form th:action="@{'/notes/' + ${noteId} + '/share'}" th:object="${shareDto}" method="post">
+                <label for="email">Share with (email)</label>
+                <input type="email" id="email" th:field="*{email}" required>
+                <label for="permission">Permission</label>
+                <select id="permission" th:field="*{permission}">
+                    <option value="VIEW">View only</option>
+                    <option value="EDIT">Can edit</option>
+                </select>
+                <br><br>
+                <button type="submit" class="btn">Share</button>
+            </form>
+
+            <h3 class="tag-group-heading" style="margin-top:24px;">Currently Shared With</h3>
+            <p th:if="${#lists.isEmpty(shares)}">This note isn't shared with anyone yet.</p>
+            <div class="note-card" th:each="share : ${shares}">
+                <span th:text="${share.sharedWithUser.username} + ' (' + ${share.sharedWithUser.email} + ')'"></span>
+                &nbsp;—&nbsp; <span th:text="${share.permission}"></span>
+                <a th:href="@{'/notes/share/delete/' + ${share.id}}" class="btn btn-sm btn-danger" style="float:right;" onclick="return confirm('Remove access for this user?');">Remove</a>
+            </div>
+            <a th:href="@{'/notes/' + ${noteId}}" class="btn" style="margin-top:16px; display:inline-block;">Back to Note</a>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

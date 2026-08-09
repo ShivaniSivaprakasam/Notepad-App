@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="auth-container">
+    <div class="login-header">
+        <h1>Login</h1>
+        <a th:href="@{/forgot-password}" class="link-muted">Forgot your password?</a>
+    </div>
+
+    <p th:if="${param.registered}" class="success-message">Registration successful! Please check your email to verify your account before logging in.</p>
+    <p th:if="${param.error}" class="error-message">Invalid username or password.</p>
+    <p th:if="${param.logout}" class="success-message">You have been logged out.</p>
+    <p th:if="${param.reset}" class="success-message">Your password has been reset. Please log in with your new password.</p>
+    <p th:if="${param.accountDeleted}" class="success-message">Your account has been deleted.</p>
+
+    <form th:action="@{/login}" method="post">
+        <div class="input-icon-group">
+            <span class="input-icon">👤</span>
+            <input type="text" id="username" name="username" placeholder="Username" required>
+        </div>
+        <div class="input-icon-group">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+        </div>
+        <div class="login-options">
+            <label class="checkbox-label"><input type="checkbox" name="remember-me"> Remember me</label>
+            <a th:href="@{/forgot-password}" class="link-muted">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn btn-full">Login</button>
+    </form>
+
+    <p class="register-hint">Don't have an account? <a th:href="@{/register}">Register here</a></p>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>
