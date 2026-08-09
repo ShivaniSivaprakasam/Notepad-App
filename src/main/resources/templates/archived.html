@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Archive - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <h1>Archive</h1>
+            <p class="note-meta">Archived notes are hidden from your main list but kept safe here.</p>
+
+            <p th:if="${#lists.isEmpty(notes)}">No archived notes.</p>
+
+            <div class="note-card" th:each="note : ${notes}">
+                <h3><a th:href="@{'/notes/' + ${note.id}}" th:text="${note.title}"></a></h3>
+                <p class="note-meta">
+                    <span th:if="${note.category}" th:text="'Category: ' + ${note.category.name}"></span>
+                    &nbsp;|&nbsp; Last updated: <span th:text="${#temporals.format(note.updatedAt, 'dd MMM yyyy, HH:mm')}"></span>
+                </p>
+                <div class="btn-row" style="margin-top:10px;">
+                    <a th:href="@{'/notes/restore/' + ${note.id}}" class="btn btn-sm">↩ Unarchive</a>
+                    <a th:href="@{'/notes/delete/' + ${note.id}}" class="btn btn-sm btn-danger"
+                       onclick="return confirm('Move this note to trash?');">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

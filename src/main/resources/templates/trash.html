@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trash - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <h1>Trash</h1>
+            <p class="note-meta">Notes here remain until permanently deleted.</p>
+            <p th:if="${#lists.isEmpty(notes)}">Trash is empty.</p>
+            <div class="note-card" th:each="note : ${notes}">
+                <h3 th:text="${note.title}"></h3>
+                <p class="note-meta">Last updated: <span th:text="${#temporals.format(note.updatedAt, 'dd MMM yyyy, HH:mm')}"></span></p>
+                <div class="btn-row" style="margin-top:10px;">
+                    <a th:href="@{'/notes/restore/' + ${note.id}}" class="btn btn-sm">Restore</a>
+                    <a th:href="@{'/notes/trash/delete/' + ${note.id}}" class="btn btn-sm btn-danger"
+                       onclick="return confirm('Permanently delete this note? This cannot be undone.');">Delete Forever</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

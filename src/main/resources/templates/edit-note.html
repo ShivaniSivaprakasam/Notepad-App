@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Note - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.css" rel="stylesheet">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <h1>Edit Note</h1>
+            <form id="noteForm" th:action="@{/notes/update}" th:object="${note}" method="post">
+                <input type="hidden" th:field="*{id}">
+
+                <label for="title">Title</label>
+                <input type="text" id="title" th:field="*{title}">
+                <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error-message"></p>
+
+                <div th:if="${isOwner}">
+                    <label for="category">Category (optional)</label>
+                    <select id="category" th:field="*{categoryId}">
+                        <option value="">-- Uncategorized --</option>
+                        <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                    </select>
+
+                    <label for="tagsInput">Tags (comma-separated)</label>
+                    <input type="text" id="tagsInput" th:field="*{tagsInput}" placeholder="e.g. java, spring, interview">
+                </div>
+
+                <label for="editor">Content</label>
+                <div id="editor" style="min-height:250px;"></div>
+                <textarea id="content" th:field="*{content}" style="display:none;"></textarea>
+
+                <br><br>
+                <div class="btn-row">
+                    <button type="submit" class="btn">Update Note</button>
+                    <a th:href="@{'/notes/' + *{id}}" class="btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js"></script>
+<script th:src="@{/js/editor.js}"></script>
+<script th:src="@{/js/autosave.js}"></script>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

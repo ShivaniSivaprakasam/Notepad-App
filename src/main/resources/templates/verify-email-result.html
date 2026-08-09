@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Verification - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="auth-container">
+    <div th:if="${verified}">
+        <h1>Email Verified ✓</h1>
+        <p class="success-message">Your email has been confirmed. You can now log in.</p>
+    </div>
+    <div th:unless="${verified}">
+        <h1>Verification Failed</h1>
+        <p class="error-message">This verification link is invalid or has already been used.</p>
+    </div>
+    <p><a th:href="@{/login}" class="btn">Go to Login</a></p>
+</div>
+</body>
+</html>

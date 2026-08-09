@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Notes - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <h1>Search Notes</h1>
+
+            <form th:action="@{/notes/search/advanced/results}" th:object="${criteria}" method="get">
+                <label for="keyword">Keyword</label>
+                <input type="text" id="keyword" th:field="*{keyword}" placeholder="Title or content...">
+
+                <label for="categoryId">Category</label>
+                <select id="categoryId" th:field="*{categoryId}">
+                    <option value="">-- Any category --</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                </select>
+
+                <label for="tagName">Tag</label>
+                <input type="text" id="tagName" th:field="*{tagName}" placeholder="e.g. java">
+
+                <label for="startDate">From</label>
+                <input type="date" id="startDate" th:field="*{startDate}">
+
+                <label for="endDate">To</label>
+                <input type="date" id="endDate" th:field="*{endDate}">
+
+                <br><br>
+                <div class="btn-row">
+                    <button type="submit" class="btn">Search</button>
+                    <a th:href="@{/notes/search/advanced}" class="btn">Clear</a>
+                </div>
+            </form>
+
+            <hr style="border-color: var(--border-color); margin:24px 0;">
+
+            <div th:if="${notes != null}">
+                <h2 th:text="${viewTitle}"></h2>
+                <p th:if="${#lists.isEmpty(notes)}">No notes matched your search.</p>
+                <div class="note-card-wrapper" th:each="note : ${notes}">
+                    <div class="note-card" th:classappend="${note.passwordProtected} ? 'locked' : ''">
+                        <h3><a th:href="@{'/notes/' + ${note.id}}" th:text="${note.title}"></a></h3>
+                        <p class="note-meta">
+                            <span th:if="${note.category}" th:text="'Category: ' + ${note.category.name}"></span>
+                            &nbsp;|&nbsp; Created: <span th:text="${#temporals.format(note.createdAt, 'dd MMM yyyy')}"></span>
+                        </p>
+                        <div th:if="${note.tags != null and not #lists.isEmpty(note.tags)}">
+                            <span th:each="tag : ${note.tags}" th:text="${tag.name}" class="tag-chip"></span>
+                        </div>
+                    </div>
+                    <div class="lock-overlay" th:if="${note.passwordProtected}">
+                        <a th:href="@{'/notes/' + ${note.id}}" class="lock-icon" title="Protected — click to unlock">🔒</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

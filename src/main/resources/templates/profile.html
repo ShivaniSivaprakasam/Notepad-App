@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <h1>My Profile</h1>
+
+            <div class="note-card">
+                <h3>Account Details</h3>
+                <p><strong>Username:</strong> <span th:text="${user.username}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+                <p><strong>Member since:</strong> <span th:text="${#temporals.format(user.createdAt, 'dd MMM yyyy')}"></span></p>
+            </div>
+
+            <div class="note-card">
+                <h3>Notification Preferences</h3>
+                <form th:action="@{/profile/notifications}" method="post">
+                    <label class="checkbox-label"><input type="checkbox" name="emailRemindersEnabled" th:checked="${user.emailRemindersEnabled}"> Email me when a reminder is due</label>
+                    <label class="checkbox-label" style="margin-top:8px;"><input type="checkbox" name="dailySummaryEnabled" th:checked="${user.dailySummaryEnabled}"> Send me a daily morning summary email</label>
+                    <br><button type="submit" class="btn">Save Preferences</button>
+                </form>
+            </div>
+
+            <div class="note-card">
+                <h3>Change Password</h3>
+                <p th:if="${passwordError}" th:text="${passwordError}" class="error-message"></p>
+                <p th:if="${passwordSuccess}" th:text="${passwordSuccess}" class="success-message"></p>
+                <form th:action="@{/profile/change-password}" method="post">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" id="currentPassword" name="currentPassword" required>
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" name="newPassword" required minlength="8">
+                    <small style="color:var(--text-muted);">At least 8 characters, with an uppercase letter, a lowercase letter, and a number.</small>
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required minlength="8">
+                    <br><br><button type="submit" class="btn">Change Password</button>
+                </form>
+            </div>
+
+            <div class="note-card" style="border-color: var(--danger-bg);">
+                <h3 style="color: var(--danger-bg);">Danger Zone</h3>
+                <p th:if="${deleteError}" th:text="${deleteError}" class="error-message"></p>
+                <p>Deleting your account permanently removes all your notes, categories, sticky notes, reminders, and shares.</p>
+                <form th:action="@{/profile/delete}" method="post"
+                      onsubmit="return confirm('This will permanently delete your account and all data. Continue?');">
+                    <label for="deletePassword">Confirm your password</label>
+                    <input type="password" id="deletePassword" name="password" required>
+                    <br><br><button type="submit" class="btn btn-danger">Delete My Account Permanently</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Notifications - Notepad</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div class="page-container">
+            <h1>Notifications</h1>
+            <h3 class="tag-group-heading">Upcoming Reminders</h3>
+            <p th:if="${#lists.isEmpty(upcoming)}">No upcoming reminders in the next 30 days.</p>
+            <div class="note-card" th:each="reminder : ${upcoming}">
+                <strong th:text="${reminder.title}"></strong>
+                <p class="note-meta" th:text="${#temporals.format(reminder.date, 'dd MMM yyyy')} + ' at ' + ${reminder.time}"></p>
+            </div>
+
+            <h3 class="tag-group-heading" style="margin-top:24px;">Recently Sent</h3>
+            <p th:if="${#lists.isEmpty(recent)}">No notifications sent in the last 7 days.</p>
+            <div class="note-card" th:each="reminder : ${recent}">
+                <strong th:text="${reminder.title}"></strong>
+                <p class="note-meta" th:text="${#temporals.format(reminder.date, 'dd MMM yyyy')} + ' at ' + ${reminder.time} + ' — Emailed ✓'"></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>
